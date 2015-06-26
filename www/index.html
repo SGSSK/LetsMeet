@@ -19,7 +19,7 @@
 				<script type="text/javascript" src="js/index.js"></script>
 				<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 				<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-				<script type="text/javascript" src="../plugins/com.monday.contact-chooser/www/ContactChooser.js"></script>
+				<script type="text/javascript" src="plugins/com.monday.contact-chooser/www/ContactChooser.js"></script>
 			    
 				<!-- date picker -->
 				
@@ -41,10 +41,12 @@
 					    }
 					    
 					    function findContact(){
-					    	
+					    	window.alert("Inside Contact Find");
 					    	window.plugins.ContactChooser.chooseContact(function (contactInfo) {
+							window.alert("Inside Contact Chooser");
 							setTimeout(function () { // use timeout to fix iOS alert problem
-        								alert(contactInfo.displayName + " " + contactInfo.email + " " + contactInfo.phoneNumber);
+										window.alert("Before Alert");
+        								window.alert(contactInfo.displayName + " " + contactInfo.email + " " + contactInfo.phoneNumber);
     									}, 0);
 							});					    	
 						}	
