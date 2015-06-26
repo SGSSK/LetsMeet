@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+	<title>&nbsp;</title>
+	<head>
+					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+					<meta name="viewport" content="width=device-width, initial-scale=1">
+					
+				<link rel="stylesheet" href="themes/A1.css" />
+				<link rel="stylesheet" href="themes/A1.min.css" />
+				<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+				<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+			
+				<script type="text/javascript" charset="utf-8" src="cordova/cordova.js"></script>
+				<script type="text/javascript" src="phonegap.js"></script>
+				<script type="text/javascript" src="contactpicker.js"></script>
+				<script type="text/javascript" src="js/index.js"></script>
+				<script type="text/javascript" src="ContactPickerPlugin.java"></script>
+				<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+				<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+			    
+				<!-- date picker -->
+				
+				<script src="jQuery.ui.datepicker.js"></script>
+				<script src="jquery.ui.datepicker.mobile.js"></script>
+			  
+				<!-- Native Contacts -->
+				<script type="text/javascript" charset="utf-8">
+					
+					    // Wait for PhoneGap to load
+					    //
+					    document.addEventListener("deviceready", onDeviceReady, false);
+					
+					    // PhoneGap is ready
+					    //
+					    function onDeviceReady() {
+					    	var elemContact = document.getElementById("btnContact");
+					    	elemContact.addEventListener("click", findContact,false);
+					    }
+					    
+					    function findContact(){
+					    	
+					    	window.alert("Inside Contacts Find");
+					    	window.plugins.ContactPicker.chooseContact(function(contactInfo) {
+    						alert(contactInfo.displayName + " " + contactInfo.email);
+							});
+
+					    	//window.contactPickerUtil(function(data) {
+                    		//window.alert("picked contact is :"+data.number+" - "+data.name);
+                			//});
+					    	
+					    	//window.alert("Inside Contacts Find");
+					    	//window.alert(document.getElementById("eventContact").value);
+					    	//var options = new ContactFindOptions();
+					        //options.filter=document.getElementById("eventContact").value;
+					        //options.multiple = true;
+					        //var fields =  ["displayName", "name", "nickname", "emails", "phoneNumbers"];
+					        //navigator.contacts.pickContact(fields, onSuccess, onError, options);
+					    }
+					
+					    // onSuccess: Get a snapshot of the current contacts
+					    //
+					    function onSuccess(contacts) {
+					        /* for (var i=0; i<contacts.length; i++) {
+					        	console.log("Display Name = " + contacts[i].displayName);
+					        	 window.alert(contacts[i].name);
+					        } */
+					        
+					        window.alert("Len "+ contacts.length);
+					        var listdata='';
+					        for (var i = 0; i < contacts.length; i++) 
+							{
+							    if(contacts[i].phoneNumbers)
+									 {
+									 	//window.alert("Name "+ contacts[i].displayName);
+									 	// listdata+='<li>' + contacts[i].displayName + '</li>' ;
+			            				//listdata+='<li>'+ 'Event Location:  ' + r['place'] +'</li>';
+				            		
+								        listdata += '<input type="checkbox" name="chk' + i + '" id="chk' + i + '"' 
+								        + 'value="' + contacts[i].displayName + '">' + contacts[i].displayName + '<br>';
+//								        <input type="checkbox" name="option1" value="Milk"> Milk<br>
+
+								        //for( var j = 0; j < contacts[i].phoneNumbers.length; j++)
+								        //{
+								          //  html += " / " + contacts[i].phoneNumbers[j].value;
+								        //}
+								        //html += "</label>";
+    								  }
+							}
+
+							$("#eventContactList").empty().append(listdata).listview('refresh');
+							//$("#demo").controlgroup("container").empty().append(html);    
+							//$("#demo").enhanceWithin().controlgroup( "refresh" );
+					}
+					    // onError: Failed to get the contacts
+					    //
+					    
+					    function onError(contactError) {
+					        alert('onError!');
+					    }
+			
+			 </script> 
+			 <!-- End of Native Contacts -->
+			 
+			 <!-- Local Database-->
+			 <script>
+			 
+			 var db = window.openDatabase("whosIn", "", "whosIn", 1024*1000);
+			 $(document).ready(function() {
+	        	 db.transaction(function(tx) {
+	        	 //tx.executeSql('DROP TABLE Events');
+	        	 tx.executeSql('CREATE TABLE Events(name , place , date, contact)', []);});
+      		 });
+      			
+		     // SAVE EVENT in addEventPage
+ 	        
+      		 //$(document).bind('pageinit',function () {
+      		 $(document).ready(function() {
+			    $("#btnSave").on('click',function(){
+      			insertEvent();
+      			window.location = "#home";
+      			return false;
+      		  });
+			 });
+
+			function insertEvent(name, place) {
+      		 	db.transaction(function(tx) {
+      		 		
+      		 		//tx.executeSql('DELETE FROM Events');
+	        	 	var elemEventNametxt = document.getElementById("eventNametxt").value;
+      		 		var elemEventLoc = document.getElementById("eventLoc").value;
+      		 		var elemEventDate = document.getElementById("eventDate").value;
+      		 		var elemEventDate = document.getElementById("eventContact").value;
+      		 		//window.alert(elemEventNametxt);
+      		 		//window.alert(elemEventLoc);
+      		 		
+          			tx.executeSql('INSERT INTO Events (name, place,date)  VALUES (?, ?, ?)', [elemEventNametxt,elemEventLoc, elemEventDate]);
+          		    
+       			});
+       		}
+			
+			 // UPCOMING EVENT LIST VIEW in Home page
+      		 
+      		 $(document).ready(function() {
+  				$("#upcomingEventsBtn").on("click", function(event, ui) {
+    			//window.alert("refreshUpdateButton");
+				renderEvent();
+     			 });
+			});
+			
+			 function renderEvent() {
+		        db.transaction(function(tx) {
+		        	tx.executeSql('SELECT * FROM Events', [], renderResults, errorQuery);
+		            //window.alert("Inside renderEvent After Select"); 
+		        });
+     		 }
+     		 
+     		 // Renders results in the home page for upcoming events
+     		 function renderResults(tx, rs) {
+     		 	
+     		 	//window.alert('Inside render Results');
+     		 	
+     		 	var listdata='';
+    			var resultslength = rs.rows.length;
+    			//window.alert(resultslength);
+    			
+    			if(rs!= null && rs.rows.length > 0 && rs.rows != null)
+        		{
+			        for(var i=0; i < rs.rows.length; i++) {
+			        	r = rs.rows.item(i);
+	          			//window.alert(r['name'] );
+	          			//window.alert(r['place'] );
+			            
+			            listdata+='<li> <a href=\'#addEventPage\'> <b>' + r['name']   + '</b><br>' +
+			            'Event Location:  ' + r['place'] + '<br>'+
+			            'Event Date:  ' + r['date'] + '</li>  </a>' ;
+			            //listdata+='<li>'+ 'Event Location:  ' + r['place'] +'</li>';
+			            }
+						
+						$("#eventListHeader").empty().append(listdata).listview('refresh');  
+                 }
+
+                 else
+                 {
+			               	//window.alert("no records exists");
+			     }
+			        	 	
+      		 	 }
+      		 
+      		  function errorQuery(err) {
+     		   			window.alert("Error processing SQL: "+err.code);
+    		  }
+      	</script>
+
+  		</head>
+
+  <body>
+		
+		<!-- ******************  Start of home - page 1 **************** -->
+			<div id="home" data-role="page" data-theme="b" data-content-theme="b"	>
+  		<!-- Header -->
+				<div data-role="header" data-position="fixed" data-theme="b">
+					<h5> Who's In </h5>
+			</div>
+		 <!-- Main -->
+		        <div role="main" class="ui-content" data-theme="b">
+	             <a data-role="button" id="upcomingEventsBtn">Upcoming Events</a>
+	             <br>
+		    	 	<ul data-role="listview" data-theme="b" id="eventListHeader">
+				</ul>
+		    	
+	              <!-- <div id="eventListHeader" data-theme="b">
+	      	         	<ul id="eventList" data-role="listview" data-inset="true" data input="#what">
+      				    </ul>
+                   	<li><a href="#" id="eventList" class="ui-btn-active">Upcomng  Events</a></li>
+	               	<ul id="list" data-role="listview" data-filter="true" data-filter-placeholder="Search Student Name..."  data-filter-theme="e" style="margin-top:20%;">
+            		</ul>
+            		-->
+    			</div>
+	   
+			    <div data-role="footer" data-position="fixed" data-theme="b">
+					 <a data-role="button" href="#addEventPage"  id="add" data-icon="plus"></a>
+					 <a data-role="button" href="#page3"  id="settings" data-icon="gear"></a>
+		    	</div>
+			</div>    
+		<!-- End of Home page -->
+
+		
+		<!-- ******************  Start of Add Event - page 2 **************** -->
+        	<div data-role="page" id="addEventPage" data-theme="b">
+        	
+        	<div data-role="content"> 
+			    <h4 align = "center">Event </h4>   
+					<div data-role="fieldcontain" data-theme="b" >
+					    <label for="name">Event Name</label>
+					    <input type="text" name="eventNametxt" id="eventNametxt" value=""  data-clear-btn="true" />
+					</div>
+					<div data-role="fieldcontain" data-theme="b">
+						<label for="date">Date</label>
+						<input type="date" name="eventDate" id="eventDate" value=""  />
+					</div>
+					 <div class="ui-field-contain">
+					     <label for="timePicker1">Time</label>
+						<input type="time" name="timePicker" id="timePicker" value="">
+					 </div>
+					<div data-role="fieldcontain">
+					    <label for="name">Location</label>
+					    <input type="text" name="eventLoc" id="eventLoc" value=""  data-clear-btn="true" />
+					</div>
+					<div data-role="fieldcontain">
+						<label for="name">Contact</label>
+						<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onchange="findContact()"/>
+						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>
+					    <!--<input type="button" value="" id="btnContact"/> --->
+					    <div id="demo" data-role="controlgroup"></div>
+					    
+					</div>
+			</div>
+
+		   <div data-role="footer" data-position="fixed" data-theme="b">
+	            <div data-role="navbar">
+			                <ul>
+			                    <li>
+			                        <a data-role="button" id="btnSave">SAVE</a>
+			                    </li>
+			                    <li>
+			                        <a data-role="button" href="#home" id="cancel" data-rel="page">CANCEL</a>
+			                    </li>
+			                </ul>
+			            </div>
+		        </div>
+      		</div>
+      
+      
+      <!-- ******************  Start of Settings - page 3 **************** -->
+      
+       		<div data-role="page" id="page3" data-theme="b">
+        	    <div data-role="header" data-position="fixed" data-theme="b">
+			    	<a data-role="button" href="#home" data-transition="slide" id="grp" data-rel="page" style="center:auto">Who's In </a>
+		    	</div>
+		    	
+			<div data-role="content"> 
+			    <h4 align = "center">Settings </h4>   
+				<ul data-role="listview" data-inset="true" data-theme = "b">
+			</div>
+			    
+			<div data-role="footer" data-position="fixed" data-theme="b">
+	              <div data-role="navbar">
+		                <ul>
+		                    <li>
+		                        <a data-role="button" id="save">SAVE</a>
+		                    </li>
+		                    <li>
+			                        <a data-role="button" href="#home" id="cancel" data-rel="page">CANCEL</a>
+			                    </li>
+		                </ul>
+		            </div>
+        		</div>
+      		</div>
+
+       <!-- End of Settings - Page 3 -->
+       
+       
+	</body>
+</html>
