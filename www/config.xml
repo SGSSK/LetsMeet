@@ -16,7 +16,6 @@
     <!-- define which version of phonegap to use, not required -->
     <preference name="phonegap-version" value="3.7.0" />
     
-    <gap:plugin name="cordova-plugin-whitelist" version="1" />
     <gap:plugin name="org.apache.cordova.contacts" />
 	<gap:plugin name="com.badrit.contactpicker"/>
 	<!--<plugin name="com.monday.contact-chooser"/> -->
