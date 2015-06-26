@@ -2,21 +2,24 @@
 <html>
 	<title>&nbsp;</title>
 	<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-					<meta name="viewport" content="width=device-width, initial-scale=1">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1">
 					
-				<link rel="stylesheet" href="themes/A1.css" />
-				<link rel="stylesheet" href="themes/A1.min.css" />
-				<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+				<link rel="stylesheet" href="css/A1.css" />
+				<link rel="stylesheet" href="css/A1.min.css" />
+				<link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
 				<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
 			
 				<script type="text/javascript" charset="utf-8" src="cordova/cordova.js"></script>
 				<script type="text/javascript" src="phonegap.js"></script>
-				<script type="text/javascript" src="contactpicker.js"></script>
+				<!--<script type="text/javascript" src="contactpicker.js"></script> 
+					<script type="text/javascript" src="ContactPickerPlugin.java"></script>
+					-->
+				
 				<script type="text/javascript" src="js/index.js"></script>
-				<script type="text/javascript" src="ContactPickerPlugin.java"></script>
 				<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 				<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+				<script type="text/javascript" src="../plugins/com.monday.contact-chooser/www/ContactChooser.js"></script>
 			    
 				<!-- date picker -->
 				
@@ -39,11 +42,12 @@
 					    
 					    function findContact(){
 					    	
-					    	window.alert("Inside Contacts Find");
-					    	window.plugins.ContactPicker.chooseContact(function(contactInfo) {
-    						alert(contactInfo.displayName + " " + contactInfo.email);
-							});
-
+					    	window.plugins.ContactChooser.chooseContact(function (contactInfo) {
+							setTimeout(function () { // use timeout to fix iOS alert problem
+        								alert(contactInfo.displayName + " " + contactInfo.email + " " + contactInfo.phoneNumber);
+    									}, 0);
+							});					    	
+						}	
 					    	//window.contactPickerUtil(function(data) {
                     		//window.alert("picked contact is :"+data.number+" - "+data.name);
                 			//});
@@ -55,7 +59,7 @@
 					        //options.multiple = true;
 					        //var fields =  ["displayName", "name", "nickname", "emails", "phoneNumbers"];
 					        //navigator.contacts.pickContact(fields, onSuccess, onError, options);
-					    }
+					    
 					
 					    // onSuccess: Get a snapshot of the current contacts
 					    //
@@ -248,9 +252,9 @@
 					</div>
 					<div data-role="fieldcontain">
 						<label for="name">Contact</label>
-						<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onchange="findContact()"/>
-						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>
-					    <!--<input type="button" value="" id="btnContact"/> --->
+						<!--<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onchange="findContact()"/>
+						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>--->
+					    <input type="button" value="" id="btnContact"> 
 					    <div id="demo" data-role="controlgroup"></div>
 					    
 					</div>
