@@ -1,0 +1,78 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "framework": {
+                "parents": {
+                    "AddressBook.framework": [
+                        {
+                            "xml": true,
+                            "count": 1
+                        },
+                        {
+                            "xml": false,
+                            "count": 2
+                        }
+                    ],
+                    "AddressBookUI.framework": [
+                        {
+                            "xml": true,
+                            "count": 1
+                        },
+                        {
+                            "xml": false,
+                            "count": 2
+                        }
+                    ],
+                    "CoreGraphics.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Contacts\"><param name=\"ios-package\" value=\"CDVContacts\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ContactPicker\"><param name=\"ios-package\" value=\"ContactPicker\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ContactChooser\"><param name=\"ios-package\" value=\"ContactChooser\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "org.apache.cordova.contacts": {
+            "PACKAGE_NAME": "org.laphonegap.helloworld"
+        },
+        "com.badrit.ContactPicker": {
+            "PACKAGE_NAME": "org.laphonegap.helloworld"
+        },
+        "com.monday.contact-chooser": {
+            "PACKAGE_NAME": "org.laphonegap.helloworld"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "org.laphonegap.helloworld"
+        }
+    }
+}
