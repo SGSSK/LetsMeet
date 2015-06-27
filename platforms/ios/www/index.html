@@ -46,6 +46,7 @@
 					    
 					    function findContact(){
 				    		window.alert("Inside Contact Find");
+				    		
 				    		//window.plugins.ContactChooser.chooseContact(function (contactInfo) {
 				    		window.plugins.ContactPicker.chooseContact(function(contactInfo) {
 								window.alert(contactInfo.displayName);
@@ -53,12 +54,14 @@
 								var elemEventNametxt = document.getElementById("eventNametxt").value;
 								
 								db.transaction(function(tx) {
-	        	 				//tx.executeSql('DROP TABLE Contacts');
+	        	 				tx.executeSql('DROP TABLE Contacts');
 	        	 				tx.executeSql('CREATE TABLE Contacts((eventName , contactName , contactNumber)', []);});
 	  		 					tx.executeSql('INSERT INTO Contacts (eventName, contactName ,contactNumber)  VALUES (?, ?, ?)', 
-	  		 					[elemEventNametxt,contactInfo.displayName, contactInfo.phoneNumbers]); }
-							});			    	
-						}	
+	  		 					[elemEventNametxt,contactInfo.displayName, contactInfo.phoneNumbers]);
+	  		 				});
+	  		 				window.alert("success");
+							}		    	
+					
 			 </script> 
 			 <!-- End of Native Contacts -->
 			 
