@@ -53,6 +53,8 @@
 								window.alert(contactInfo.displayName);
 								window.alert(contactInfo.phones);
 								var elemEventNametxt = document.getElementById("eventNametxt").value;
+							
+								$("#eventContactList").empty().append(listdata).listview('refresh');	
 								
 								db.transaction(function(tx) {
 	        	 				tx.executeSql('DROP TABLE Contacts');
@@ -63,7 +65,7 @@
 						
 	  		 				});
 	  		 				
-	  		 				$("#eventContactList").empty().append(listdata).listview('refresh');  
+	  		 				  
 							}		    	
 					
 			 </script> 
@@ -217,7 +219,7 @@
 					</div>
 					<div data-role="fieldcontain">
 						<label for="name">Contact</label>
-						<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onfocus="findContact()"/>
+						<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onclick="findContact()"/>
 						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>
 					    <!--<input type="button" value="" id="btnContact"> 
 					    <div id="demo" data-role="controlgroup"></div>-->
