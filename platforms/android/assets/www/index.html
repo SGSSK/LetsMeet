@@ -46,20 +46,24 @@
 					    
 					    function findContact(){
 				    		window.alert("Inside Contact Find");
-				    		
+				    		var listdata='';
+    						
 				    		//window.plugins.ContactChooser.chooseContact(function (contactInfo) {
 				    		window.plugins.ContactPicker.chooseContact(function(contactInfo) {
 								window.alert(contactInfo.displayName);
-								window.alert(contactInfo.phoneNumbers);
+								window.alert(contactInfo.phones);
 								var elemEventNametxt = document.getElementById("eventNametxt").value;
 								
 								db.transaction(function(tx) {
 	        	 				tx.executeSql('DROP TABLE Contacts');
 	        	 				tx.executeSql('CREATE TABLE Contacts((eventName , contactName , contactNumber)', []);});
 	  		 					tx.executeSql('INSERT INTO Contacts (eventName, contactName ,contactNumber)  VALUES (?, ?, ?)', 
-	  		 					[elemEventNametxt,contactInfo.displayName, contactInfo.phoneNumbers]);
+	  		 							[elemEventNametxt,contactInfo.displayName, contactInfo.phones]);
+	  		 					listdata+='<li> ' + contactInfo.displayName  + ',' +'</li>';
+						
 	  		 				});
-	  		 				window.alert("success");
+	  		 				
+	  		 				$("#eventContactList").empty().append(listdata).listview('refresh');  
 							}		    	
 					
 			 </script> 
@@ -213,10 +217,10 @@
 					</div>
 					<div data-role="fieldcontain">
 						<label for="name">Contact</label>
-						<!--<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onchange="findContact()"/>
-						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>--->
-					    <input type="button" value="" id="btnContact"> 
-					    <div id="demo" data-role="controlgroup"></div>
+						<input type="text" name="eventContact" id="eventContact" value=""  data-clear-btn="true" onfocus="findContact()"/>
+						<ul data-role="listview" data-theme="b" id="eventContactList"> </ul>
+					    <!--<input type="button" value="" id="btnContact"> 
+					    <div id="demo" data-role="controlgroup"></div>-->
 					    
 					</div>
 			</div>
